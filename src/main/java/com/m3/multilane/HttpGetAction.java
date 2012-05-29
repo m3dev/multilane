@@ -33,7 +33,7 @@ public class HttpGetAction implements Action<String, String> {
 
     public HttpGetAction(String url, String charset, Integer timeoutMillis) {
         setInput(url);
-        setEncoding(charset);
+        setCharset(charset);
         setTimeoutMillis(timeoutMillis);
     }
 
@@ -67,7 +67,7 @@ public class HttpGetAction implements Action<String, String> {
         this.readTimeoutMillis = millis;
     }
 
-    public void setEncoding(String charset) {
+    public void setCharset(String charset) {
         this.charset = charset;
     }
 
