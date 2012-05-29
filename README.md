@@ -1,8 +1,6 @@
 # multilane
 
-multilane is a multi-lane expressway to aggregate values in parallel.
-
-Note: This library is in an experimental stage now.
+multilane is a multi-lane expressway to aggregate values in parallel. This library is in an experimental stage now.
 
 # Setup
 
@@ -25,10 +23,12 @@ Available on the maven central repository. Add the following dependency:
 ```java
 HttpGetMultiLane multiLane = new HttpGetMultiLane();
 
+String charset = "UTF-8";
 long timeoutMillis = 2500L;
-HttpGetAction action1 = new HttpGetAction("http://localhost:8080/api/response-in-1second", "UTF-8", timeoutMillis);
-HttpGetAction action2 = new HttpGetAction("http://localhost:8080/api/response-in-2seconds", "UTF-8", timeoutMillis);
-HttpGetAction action3 = new HttpGetAction("http://localhost:8080/api/response-in-3seconds", "UTF-8", timeoutMillis);
+
+HttpGetAction action1 = new HttpGetAction("http://localhost:8080/api/1s", charset, timeoutMillis);
+HttpGetAction action2 = new HttpGetAction("http://localhost:8080/api/2s", charset, timeoutMillis);
+HttpGetAction action3 = new HttpGetAction("http://localhost:8080/api/3s", charset, timeoutMillis);
 
 String unavailable = "<li>Unavailable</li>";
 
