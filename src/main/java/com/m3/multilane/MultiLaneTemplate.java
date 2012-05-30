@@ -15,14 +15,23 @@
  */
 package com.m3.multilane;
 
+import com.m3.multilane.action.Action;
 import com.m3.scalaflavor4j.*;
 import com.sun.jersey.client.impl.CopyOnWriteHashMap;
+import jsr166y.ForkJoinPool;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
-import static com.m3.scalaflavor4j.ConcurrentOps.future;
-
+/**
+ * Basic MultiLane implementation
+ *
+ * @param <A> action type
+ * @param <R> result type
+ */
 public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLane<A, R> {
 
     protected Map<String, F0<Either<Throwable, R>>> futures = new ConcurrentHashMap<String, F0<Either<Throwable, R>>>();
@@ -31,23 +40,34 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
 
     protected Map<String, Long> spentTime = new ConcurrentHashMap<String, Long>();
 
+    protected ForkJoinPool forkJoinPool = new ForkJoinPool();
+
     @Override
     public MultiLane<A, R> start(final String name, final A action) {
         return start(name, action, null);
     }
 
     @Override
-    public MultiLane<A, R> start(final String name, final A action, R defaultValue) {
+    public MultiLane<A, R> start(final String name, final A action, final R defaultValue) {
         defaultValues.put(name, defaultValue);
-        F0<Either<Throwable, R>> f = future(new F0<Either<Throwable, R>>() {
-            public Either<Throwable, R> _() {
+        final FutureTask<Either<Throwable, R>> futureTask = new FutureTask<Either<Throwable, R>>(new Callable<Either<Throwable, R>>() {
+            public Either<Throwable, R> call() throws Exception {
                 long before = currentMillis();
                 Either<Throwable, R> result = action.apply();
                 spentTime.put(name, currentMillis() - before);
                 return result;
             }
         });
-        futures.put(name, f);
+        forkJoinPool.execute(futureTask);
+        futures.put(name, new F0<Either<Throwable, R>>() {
+            public Either<Throwable, R> _() {
+                try {
+                    return futureTask.get(action.getTimeoutMillis(), TimeUnit.MILLISECONDS);
+                } catch (Throwable t) {
+                    return Left._(t);
+                }
+            }
+        });
         return this;
     }
 
