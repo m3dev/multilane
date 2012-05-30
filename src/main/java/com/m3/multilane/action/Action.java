@@ -19,37 +19,43 @@ import com.m3.scalaflavor4j.Either;
 
 /**
  * Action that will be executed asynchronously
- * @param <INPUT> input type
+ *
+ * @param <INPUT>  input type
  * @param <OUTPUT> output type
  */
 public interface Action<INPUT, OUTPUT> {
 
     /**
      * Getter for input
+     *
      * @return input
      */
     INPUT getInput();
 
     /**
      * Setter for input
+     *
      * @param input input
      */
     void setInput(INPUT input);
 
     /**
      * Getter for timeout millis
+     *
      * @return timeout millis
      */
     Integer getTimeoutMillis();
 
     /**
      * Setter for timeout millis
+     *
      * @param millis timeout millis
      */
     void setTimeoutMillis(Integer millis);
 
     /**
      * Apply this action synchronously
+     *
      * @return result as an either
      */
     Either<Throwable, OUTPUT> apply();

@@ -21,6 +21,9 @@ import com.m3.scalaflavor4j.Right;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
+/**
+ * HTTP GET request action
+ */
 public class HttpGetAction implements Action<String, String> {
 
     private String url;

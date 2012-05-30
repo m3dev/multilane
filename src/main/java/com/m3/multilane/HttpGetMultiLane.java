@@ -15,5 +15,10 @@
  */
 package com.m3.multilane;
 
+import com.m3.multilane.action.HttpGetAction;
+
+/**
+ * A MultiLane which handle HttpGetAction
+ */
 public class HttpGetMultiLane extends MultiLaneTemplate<HttpGetAction, String> {
 }
