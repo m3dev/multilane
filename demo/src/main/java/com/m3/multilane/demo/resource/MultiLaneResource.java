@@ -1,6 +1,6 @@
 package com.m3.multilane.demo.resource;
 
-import com.m3.multilane.HttpGetAction;
+import com.m3.multilane.action.HttpGetAction;
 import com.m3.multilane.HttpGetMultiLane;
 import com.m3.multilane.demo.view.ViewModel;
 import com.m3.scalaflavor4j.SMap;

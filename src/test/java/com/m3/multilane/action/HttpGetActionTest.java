@@ -1,5 +1,7 @@
-package com.m3.multilane;
+package com.m3.multilane.action;
 
+import com.m3.multilane.TestServer;
+import com.m3.multilane.action.HttpGetAction;
 import com.m3.scalaflavor4j.Either;
 import org.junit.After;
 import org.junit.Before;

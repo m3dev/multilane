@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.m3.multilane;
+package com.m3.multilane.action;
 
 import com.m3.scalaflavor4j.Either;
 import com.m3.scalaflavor4j.Left;
@@ -58,8 +58,18 @@ public class HttpGetAction implements Action<String, String> {
     }
 
     @Override
+    public String getInput() {
+        return this.url;
+    }
+
+    @Override
     public void setInput(String input) {
         this.url = input;
+    }
+
+    @Override
+    public Integer getTimeoutMillis() {
+        return this.readTimeoutMillis;
     }
 
     @Override
