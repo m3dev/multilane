@@ -1,19 +1,23 @@
 package com.m3.multilane.demo.resource;
 
-import com.m3.multilane.action.HttpGetAction;
 import com.m3.multilane.HttpGetMultiLane;
-import com.m3.multilane.demo.view.ViewModel;
+import com.m3.multilane.action.HttpGetAction;
+import com.m3.multilane.demo.view.TemplateEngineManager;
 import com.m3.scalaflavor4j.SMap;
 import com.m3.scalaflavor4j.Tuple2;
 import com.m3.scalaflavor4j.VoidF1;
-import com.sun.jersey.api.view.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
@@ -21,6 +25,11 @@ import java.util.Map;
 public class MultiLaneResource {
 
     Logger log = LoggerFactory.getLogger(MultiLaneResource.class);
+
+    @Context
+    HttpServletRequest request;
+    @Context
+    ServletContext servletContext;
 
     @GET
     public Object multiLane(@QueryParam("timeout") @DefaultValue("5000") Integer timeout) {
@@ -44,22 +53,23 @@ public class MultiLaneResource {
 
         Map<String, String> parts = multiLane.collectValues();
 
-        ViewModel model = new ViewModel();
-        model.setP1(parts.get("p1"));
-        model.setP2(parts.get("p2"));
-        model.setP3(parts.get("p3"));
-        model.setP4(parts.get("p4"));
-        model.setP5(parts.get("p5"));
-        model.setP6(parts.get("p6"));
-        model.setSpentTime(System.currentTimeMillis() - start);
-
         SMap._(multiLane.spentTime()).foreach(new VoidF1<Tuple2<String, Long>>() {
             public void _(Tuple2<String, Long> each) {
                 log.info(each._1() + " -> " + each._2() + " ms");
             }
         });
 
-        return Response.ok(new Viewable("/parts.jsp", model)).build();
+        WebContext context = new WebContext(request, servletContext);
+        context.setVariable("p1", parts.get("p1"));
+        context.setVariable("p2", parts.get("p2"));
+        context.setVariable("p3", parts.get("p3"));
+        context.setVariable("p4", parts.get("p4"));
+        context.setVariable("p5", parts.get("p5"));
+        context.setVariable("p6", parts.get("p6"));
+        context.setVariable("spentTime", System.currentTimeMillis() - start);
+
+        TemplateEngine engine = TemplateEngineManager.getTemplateEngine();
+        return Response.ok(engine.process("parts", context)).build();
     }
 
 }
