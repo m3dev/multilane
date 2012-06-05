@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>multilane demo</title>
+    <style>
+        body { padding-top: 40px; }
+    </style>
+    <link rel="stylesheet" media="screen" href='/static/css/bootstrap.min.css'/>
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>multilane demo</h1>
+    <hr/>
+
+    <h2>Response time : <span th:utext="${spentTime}">NaN</span> millis.</h2>
+    <hr/>
+
+    <div>
+        <ul>
+            <p th:utext="${p1}">p1</p>
+
+            <p th:utext="${p2}">p2</p>
+
+            <p th:utext="${p3}">p3</p>
+
+            <p th:utext="${p4}">p4</p>
+
+            <p th:utext="${p5}">p5</p>
+
+            <p th:utext="${p6}">p6</p>
+        </ul>
+    </div>
+
+</div>
+</body>
+</html>
