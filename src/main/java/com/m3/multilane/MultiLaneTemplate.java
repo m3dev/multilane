@@ -17,7 +17,6 @@ package com.m3.multilane;
 
 import com.m3.multilane.action.Action;
 import com.m3.scalaflavor4j.*;
-import com.sun.jersey.client.impl.CopyOnWriteHashMap;
 import jsr166y.ForkJoinPool;
 
 import java.util.Map;
@@ -34,12 +33,24 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLane<A, R> {
 
+    /**
+     * Futures to collect later
+     */
     protected Map<String, F0<Either<Throwable, R>>> futures = new ConcurrentHashMap<String, F0<Either<Throwable, R>>>();
 
-    protected Map<String, R> defaultValues = new CopyOnWriteHashMap<String, R>();
+    /**
+     * Default values that will be used if results are Left.
+     */
+    protected Map<String, R> defaultValues = new ConcurrentHashMap<String, R>();
 
+    /**
+     * Timing results
+     */
     protected Map<String, Long> spentTime = new ConcurrentHashMap<String, Long>();
 
+    /**
+     * Fork/Join Pool
+     */
     protected ForkJoinPool forkJoinPool = new ForkJoinPool();
 
     @Override
@@ -49,7 +60,9 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
 
     @Override
     public MultiLane<A, R> start(final String name, final A action, final R defaultValue) {
-        defaultValues.put(name, defaultValue);
+        if (defaultValue != null) {
+            defaultValues.put(name, defaultValue);
+        }
         final FutureTask<Either<Throwable, R>> futureTask = new FutureTask<Either<Throwable, R>>(new Callable<Either<Throwable, R>>() {
             public Either<Throwable, R> call() throws Exception {
                 long before = currentMillis();
