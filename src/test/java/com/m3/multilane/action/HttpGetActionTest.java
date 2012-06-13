@@ -11,7 +11,7 @@ import static org.junit.Assert.assertThat;
 
 public class HttpGetActionTest {
 
-    TestServer server = new TestServer();
+    TestServer server = new TestServer(8882);
 
     @Before
     public void setUp() throws Exception {
@@ -36,7 +36,7 @@ public class HttpGetActionTest {
 
     @Test
     public void apply_A$String() throws Exception {
-        HttpGetAction get = new HttpGetAction("http://localhost:8888/", "UTF-8", 3000);
+        HttpGetAction get = new HttpGetAction("http://localhost:8882/", "UTF-8", 3000);
         Either<Throwable, String> actual = get.apply();
         assertThat(actual.isRight(), is(true));
         assertThat(actual.right().getOrElse("").length(), is(greaterThan(0)));
@@ -44,21 +44,21 @@ public class HttpGetActionTest {
 
     @Test
     public void apply_A$String_NotFound() throws Exception {
-        HttpGetAction get = new HttpGetAction("http://localhost:8888/404", "UTF-8", 3000);
+        HttpGetAction get = new HttpGetAction("http://localhost:8882/404", "UTF-8", 3000);
         Either<Throwable, String> actual = get.apply();
         assertThat(actual.isLeft(), is(true));
     }
 
     @Test
     public void apply_A$String_InternalServerError() throws Exception {
-        HttpGetAction get = new HttpGetAction("http://localhost:8888/500", "UTF-8", 3000);
+        HttpGetAction get = new HttpGetAction("http://localhost:8882/500", "UTF-8", 3000);
         Either<Throwable, String> actual = get.apply();
         assertThat(actual.isLeft(), is(true));
     }
 
     @Test
     public void apply_A$String_ReadTimeout() throws Exception {
-        HttpGetAction get = new HttpGetAction("http://localhost:8888/", "UTF-8", 1);
+        HttpGetAction get = new HttpGetAction("http://localhost:8882/", "UTF-8", 1);
         Either<Throwable, String> actual = get.apply();
         assertThat(actual.isLeft(), is(true));
     }

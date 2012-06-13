@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 
 public class HttpGetMultiLaneTest {
 
-    TestServer server = new TestServer();
+    TestServer server = new TestServer(8881);
 
     @Before
     public void setUp() throws Exception {
@@ -40,7 +40,7 @@ public class HttpGetMultiLaneTest {
     public void collect_A$() throws Exception {
 
         HttpGetMultiLane multiLane = new HttpGetMultiLane();
-        HttpGetAction httpGet = new HttpGetAction("http://localhost:8888/", "UTF-8", 1000);
+        HttpGetAction httpGet = new HttpGetAction("http://localhost:8881/", "UTF-8", 1000);
         multiLane.start("req-1", httpGet);
         multiLane.start("req-2", httpGet);
 
@@ -53,7 +53,7 @@ public class HttpGetMultiLaneTest {
     public void collectValues_A$() throws Exception {
 
         HttpGetMultiLane multiLane = new HttpGetMultiLane();
-        HttpGetAction httpGet = new HttpGetAction("http://localhost:8888/", "UTF-8", 1000);
+        HttpGetAction httpGet = new HttpGetAction("http://localhost:8881/", "UTF-8", 1000);
         multiLane.start("req-1", httpGet);
         multiLane.start("req-2", httpGet);
 
@@ -66,7 +66,7 @@ public class HttpGetMultiLaneTest {
     public void collectValues_A$_defaultValues() throws Exception {
 
         HttpGetMultiLane multiLane = new HttpGetMultiLane();
-        HttpGetAction httpGet = new HttpGetAction("http://localhost:8888/", "UTF-8", 1);
+        HttpGetAction httpGet = new HttpGetAction("http://localhost:8881/", "UTF-8", 1);
         multiLane.start("req-1", httpGet, "Unavailable");
         multiLane.start("req-2", httpGet, "Unavailable");
 

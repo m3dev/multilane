@@ -53,8 +53,8 @@ public class TestServer {
 
     private Server server;
 
-    public TestServer() {
-        server = new Server(8888);
+    public TestServer(int port) {
+        server = new Server(port);
         server.setHandler(new GetMethodHandler());
     }
 
