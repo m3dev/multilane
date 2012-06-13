@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <title>multilane demo</title>
     <style>
         body { padding-top: 40px; }
     </style>
-    <link rel="stylesheet" media="screen" href='/static/css/bootstrap.min.css'/>
+    <link rel="stylesheet" media="screen" href="../../static/css/bootstrap.min.css" th:href="@{/static/css/bootstrap.min.css}" />
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -19,7 +19,7 @@
     <h1>multilane demo</h1>
     <hr/>
 
-    <form class="form-horizontal" action="/in-order/" method="get">
+    <form class="form-horizontal" th:attr="action=@{/in-order/}" method="get">
         <fieldset>
             <legend>in-order example</legend>
             <div class="control-group">
@@ -33,7 +33,7 @@
         </fieldset>
     </form>
 
-    <form class="form-horizontal" action="/multilane/" method="get">
+    <form class="form-horizontal" th:attr="action=@{/multilane/}" method="get">
         <fieldset>
             <legend>multilane example</legend>
             <div class="control-group">
