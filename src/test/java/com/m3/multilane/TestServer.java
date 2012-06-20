@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 
 public class TestServer {
 
+    public static void main(String[] args) throws Exception {
+        new TestServer(8888).start();
+    }
+
     public class GetMethodHandler extends AbstractHandler {
         @Override
         public void handle(String target, Request baseRequest, HttpServletRequest req, HttpServletResponse res) {
@@ -32,14 +36,21 @@ public class TestServer {
                     } else {
                         Thread.sleep(100L);
                     }
-                    res.setStatus(HttpServletResponse.SC_OK);
-                    res.setCharacterEncoding("UTF-8");
-                    res.setContentType("text/plain");
                     String v = req.getParameter("v");
+                    String charset = req.getParameter("charset");
+
+                    res.setStatus(HttpServletResponse.SC_OK);
+                    res.setContentType("text/plain");
+
+                    if (charset != null) {
+                        res.setCharacterEncoding(charset);
+                    }
+
                     if (v != null) {
-                        res.getWriter().print(v);
+                        String body = new String(v.getBytes(res.getCharacterEncoding()), res.getCharacterEncoding());
+                        res.getWriter().print(body);
                     } else {
-                        res.getWriter().print("nothing");
+                        res.getWriter().print("Nothing");
                     }
                 }
                 baseRequest.setHandled(true);

@@ -1,7 +1,7 @@
 package com.m3.multilane.demo.resource;
 
-import com.m3.multilane.HttpGetMultiLane;
-import com.m3.multilane.action.HttpGetAction;
+import com.m3.multilane.HttpGetToStringMultiLane;
+import com.m3.multilane.action.HttpGetToStringAction;
 import com.m3.multilane.demo.view.TemplateEngineManager;
 import com.m3.scalaflavor4j.SMap;
 import com.m3.scalaflavor4j.Tuple2;
@@ -36,11 +36,11 @@ public class MultiLaneResource {
 
         Long start = System.currentTimeMillis();
 
-        HttpGetMultiLane multiLane = new HttpGetMultiLane();
+        HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
 
-        HttpGetAction wait1sec = new HttpGetAction("http://localhost:8080/api/1000", "UTF-8", timeout);
-        HttpGetAction wait2sec = new HttpGetAction("http://localhost:8080/api/2000", "UTF-8", timeout);
-        HttpGetAction wait3sec = new HttpGetAction("http://localhost:8080/api/3000", "UTF-8", timeout);
+        HttpGetToStringAction wait1sec = new HttpGetToStringAction("http://localhost:8080/api/1000", timeout);
+        HttpGetToStringAction wait2sec = new HttpGetToStringAction("http://localhost:8080/api/2000", timeout);
+        HttpGetToStringAction wait3sec = new HttpGetToStringAction("http://localhost:8080/api/3000", timeout);
 
         String unavailable = "<li>Unavailable</li>";
 

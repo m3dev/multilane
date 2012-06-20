@@ -29,14 +29,12 @@ Available on the maven central repository. Add the following dependency:
 ## Example
 
 ```java
-HttpGetMultiLane multiLane = new HttpGetMultiLane();
+HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
 
-String charset = "UTF-8";
 long timeoutMillis = 2500L;
-
-HttpGetAction action1 = new HttpGetAction("http://localhost:8080/api/1s", charset, timeoutMillis);
-HttpGetAction action2 = new HttpGetAction("http://localhost:8080/api/2s", charset, timeoutMillis);
-HttpGetAction action3 = new HttpGetAction("http://localhost:8080/api/3s", charset, timeoutMillis);
+HttpGetToStringAction action1 = new HttpGetToStringAction("http://localhost:8080/api/1s", timeoutMillis);
+HttpGetToStringAction action2 = new HttpGetToStringAction("http://localhost:8080/api/2s", timeoutMillis);
+HttpGetToStringAction action3 = new HttpGetToStringAction("http://localhost:8080/api/3s", timeoutMillis);
 
 String unavailable = "<li>Unavailable</li>";
 
@@ -49,6 +47,7 @@ multiLane.start("p6", action3, unavailable);
 
 // Blocking here!
 Map<String, String> parts = multiLane.collectValues();
+
 String p1 = parts.get("p1");
 /*
  Map(
@@ -64,4 +63,10 @@ String p1 = parts.get("p1");
 // or handle Either values if you need to check the errors
 Map<String, Either<Throwable, String>> results = multiLane.collect();
 ```
+
+## License
+
+Apache License, Version 2.0
+
+http://www.apache.org/licenses/LICENSE-2.0.html
 

@@ -97,7 +97,7 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
 
     @Override
     public Map<String, R> collectValues() {
-        return SMap._(collect()).map(new F1<Tuple2<String, Either<Throwable, R>>, Tuple2<String, R>>() {
+        return SMap._(SMap._(collect()).toSeq().map(new F1<Tuple2<String, Either<Throwable, R>>, Tuple2<String, R>>() {
             public Tuple2<String, R> _(Tuple2<String, Either<Throwable, R>> each) throws Exception {
                 final String name = each._1();
                 final Either<Throwable, R> result = each._2();
@@ -107,7 +107,11 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
                     }
                 }));
             }
-        }).toMap();
+        }).filter(new F1<Tuple2<String, R>, Boolean>() {
+            public Boolean _(Tuple2<String, R> each) {
+                return each._1() != null && each._2() != null;
+            }
+        })).toMap();
     }
 
     @Override

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
-    <title>multilane demo</title>
+    <title>MultiLane demo</title>
     <style>
         body { padding-top: 40px; }
     </style>
@@ -16,7 +16,7 @@
 
 <div class="container">
 
-    <h1>multilane demo</h1>
+    <h1>MultiLane demo</h1>
     <hr/>
 
     <form class="form-horizontal" th:attr="action=@{/in-order/}" method="get">
@@ -26,7 +26,7 @@
                 <label class="control-label">Timeout millis</label>
 
                 <div class="controls">
-                    <input type="text" class="input-medium" name="timeout" value="5000"/>
+                    <input type="text" class="input-medium" name="timeout" value="2500"/>
                     <button type="submit" class="btn">Run</button>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                 <label class="control-label">Timeout millis</label>
 
                 <div class="controls">
-                    <input type="text" class="input-medium" name="timeout" value="5000"/>
+                    <input type="text" class="input-medium" name="timeout" value="2500"/>
                     <button type="submit" class="btn">Run</button>
                 </div>
             </div>
@@ -50,11 +50,11 @@
     <hr/>
 
 <pre>
-HttpGetMultiLane multiLane = new HttpGetMultiLane();
+HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
         
-HttpGetAction wait1sec = new HttpGetAction("http://localhost:8080/api/1000", "UTF-8", timeout);
-HttpGetAction wait2sec = new HttpGetAction("http://localhost:8080/api/2000", "UTF-8", timeout);
-HttpGetAction wait3sec = new HttpGetAction("http://localhost:8080/api/3000", "UTF-8", timeout);
+HttpGetToStringAction wait1sec = new HttpGetToStringAction("http://localhost:8080/api/1000", timeout);
+HttpGetToStringAction wait2sec = new HttpGetToStringAction("http://localhost:8080/api/2000", timeout);
+HttpGetToStringAction wait3sec = new HttpGetToStringAction("http://localhost:8080/api/3000", timeout);
         
 String unavailable = "&lt;li&gt;Unavailable&lt;/li&gt;";
         
@@ -67,17 +67,18 @@ multiLane.start("p6", wait3sec, unavailable);
 
 // Blocking!
 Map&lt;String, String&gt; parts = multiLane.collectValues();
-        
-ViewModel model = new ViewModel();
-model.setP1(parts.get("p1"));
-model.setP2(parts.get("p2"));
-model.setP3(parts.get("p3"));
-model.setP4(parts.get("p4"));
-model.setP5(parts.get("p5"));
-model.setP6(parts.get("p6"));
-model.setSpentTime(System.currentTimeMillis() - start);
 
-return Response.ok(new Viewable("/parts.jsp", model)).build();
+WebContext context = new WebContext(request, servletContext);
+context.setVariable("p1", parts.get("p1"));
+context.setVariable("p2", parts.get("p2"));
+context.setVariable("p3", parts.get("p3"));
+context.setVariable("p4", parts.get("p4"));
+context.setVariable("p5", parts.get("p5"));
+context.setVariable("p6", parts.get("p6"));
+context.setVariable("spentTime", System.currentTimeMillis() - start);
+
+TemplateEngine engine = TemplateEngineManager.getTemplateEngine();
+return Response.ok(engine.process("parts", context)).build();
 </pre>
 </div>
 </body>
