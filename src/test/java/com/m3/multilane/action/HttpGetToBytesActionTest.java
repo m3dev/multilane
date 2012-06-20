@@ -68,7 +68,7 @@ public class HttpGetToBytesActionTest {
                 os.close();
             }
             if (new File("./m3com.gif").exists()) {
-                new File("./m3com.gif").deleteOnExit();
+                new File("./m3com.gif").delete();
             }
         }
     }
