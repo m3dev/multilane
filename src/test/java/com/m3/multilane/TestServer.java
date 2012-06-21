@@ -19,7 +19,14 @@ public class TestServer {
         public void handle(String target, Request baseRequest, HttpServletRequest req, HttpServletResponse res) {
             try {
                 String uri = req.getRequestURI();
-                if (uri.equals("/404")) {
+                if (uri.equals("/204")) {
+                    res.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                    res.getWriter().print("");
+                } else if (uri.equals("/302")) {
+                    res.setStatus(HttpServletResponse.SC_FOUND);
+                    res.setHeader("Location", "/?v=redirected");
+                    res.getWriter().print("not redirected");
+                } else if (uri.equals("/404")) {
                     res.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 } else if (uri.equals("/500")) {
                     res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

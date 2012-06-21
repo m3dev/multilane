@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 
 public class HttpGetToStringActionTest {
 
-    public String urlEncode(String param ) throws Exception {
+    public String urlEncode(String param) throws Exception {
         return URLEncoder.encode(param, "UTF-8");
     }
 
@@ -42,10 +42,35 @@ public class HttpGetToStringActionTest {
 
     @Test
     public void apply_A$() throws Exception {
-        HttpGetToStringAction get = new HttpGetToStringAction("http://localhost:8882/?v=" + urlEncode("日本語") +"&charset=UTF-8", 3000);
+        HttpGetToStringAction get = new HttpGetToStringAction("http://localhost:8882/?v=" + urlEncode("日本語") + "&charset=UTF-8", 3000);
         Either<Throwable, String> actual = get.apply();
         assertThat(actual.isRight(), is(true));
         assertThat(actual.right().getOrElse(""), is(equalTo("日本語")));
+    }
+
+    @Test
+    public void apply_A$_NoContent() throws Exception {
+        HttpGetToStringAction get = new HttpGetToStringAction("http://localhost:8882/204", 3000);
+        Either<Throwable, String> actual = get.apply();
+        assertThat(actual.isLeft(), is(true));
+        assertThat(actual.left().getOrNull().getClass().getName(), is(equalTo("com.sun.jersey.api.client.UniformInterfaceException")));
+    }
+
+    @Test
+    public void apply_A$_Found_follow() throws Exception {
+        HttpGetToStringAction get = new HttpGetToStringAction("http://localhost:8882/302", 3000);
+        Either<Throwable, String> actual = get.apply();
+        assertThat(actual.isRight(), is(true));
+        assertThat(actual.right().getOrNull(), is(equalTo("redirected")));
+    }
+
+    @Test
+    public void apply_A$_Found_neverFollow() throws Exception {
+        HttpGetToStringAction get = new HttpGetToStringAction("http://localhost:8882/302", 3000);
+        get.setFollowRedirect(false);
+        Either<Throwable, String> actual = get.apply();
+        assertThat(actual.isLeft(), is(true));
+        assertThat(actual.left().getOrNull().getClass().getName(), is(equalTo("com.sun.jersey.api.client.UniformInterfaceException")));
     }
 
     @Test
@@ -71,7 +96,7 @@ public class HttpGetToStringActionTest {
 
     @Test
     public void apply_A$_InvalidEncoding() throws Exception {
-        HttpGetToStringAction get = new HttpGetToStringAction("http://localhost:8882/?v=" + urlEncode("日本語") +"&charset=Shift_JIS", 3000);
+        HttpGetToStringAction get = new HttpGetToStringAction("http://localhost:8882/?v=" + urlEncode("日本語") + "&charset=Shift_JIS", 3000);
         Either<Throwable, String> actual = get.apply();
         assertThat(actual.isRight(), is(true));
         assertThat(actual.right().getOrElse(""), is(equalTo("日本語")));

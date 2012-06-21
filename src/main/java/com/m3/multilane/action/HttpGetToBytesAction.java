@@ -30,6 +30,8 @@ public class HttpGetToBytesAction implements Action<String, byte[]> {
 
     private Integer readTimeoutMillis = 10000;
 
+    private boolean followRedirect = true;
+
     public HttpGetToBytesAction(String url, Integer timeoutMillis) {
         setInput(url);
         setTimeoutMillis(timeoutMillis);
@@ -39,6 +41,7 @@ public class HttpGetToBytesAction implements Action<String, byte[]> {
     public Either<Throwable, byte[]> apply() {
         try {
             Client client = JerseyClientUtil.createClient(readTimeoutMillis);
+            client.setFollowRedirects(isFollowRedirect());
             return Right._(client.resource(url).get(byte[].class));
         } catch (Throwable e) {
             return Left._(e);
@@ -63,6 +66,14 @@ public class HttpGetToBytesAction implements Action<String, byte[]> {
     @Override
     public void setTimeoutMillis(Integer millis) {
         this.readTimeoutMillis = millis;
+    }
+
+    public boolean isFollowRedirect() {
+        return followRedirect;
+    }
+
+    public void setFollowRedirect(boolean followRedirect) {
+        this.followRedirect = followRedirect;
     }
 
 }
