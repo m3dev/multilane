@@ -1,4 +1,4 @@
-package com.m3.multilane.demo.resource;
+package demo.resource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

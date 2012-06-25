@@ -9,7 +9,7 @@
         <filter-class>com.sun.jersey.spi.container.servlet.ServletContainer</filter-class>
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>com.m3.multilane.demo.resource</param-value>
+            <param-value>demo.resource</param-value>
         </init-param>
         <init-param>
             <param-name>com.sun.jersey.config.property.JSPTemplatesBasePath</param-name>

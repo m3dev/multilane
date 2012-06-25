@@ -1,6 +1,6 @@
-package com.m3.multilane.demo.resource;
+package demo.resource;
 
-import com.m3.multilane.demo.view.TemplateEngineManager;
+import demo.view.TemplateEngineManager;
 import com.sun.jersey.api.client.Client;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;

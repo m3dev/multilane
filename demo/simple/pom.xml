@@ -7,7 +7,7 @@
     <artifactId>multilane-demo</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>${project.artifactId}</name>
-    <description>Multi-lane app demo</description>
+    <description>MultiLane demo application</description>
     <packaging>war</packaging>
     <inceptionYear>2012</inceptionYear>
 
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.m3</groupId>
             <artifactId>multilane</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.1.0</version>
         </dependency>
 
         <dependency>

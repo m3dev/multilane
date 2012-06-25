@@ -1,4 +1,4 @@
-package com.m3.multilane.demo.view;
+package demo.view;
 
 public class ViewModel {
 

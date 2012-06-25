@@ -1,8 +1,8 @@
-package com.m3.multilane.demo.resource;
+package demo.resource;
 
 import com.m3.multilane.HttpGetToStringMultiLane;
 import com.m3.multilane.action.HttpGetToStringAction;
-import com.m3.multilane.demo.view.TemplateEngineManager;
+import demo.view.TemplateEngineManager;
 import com.m3.scalaflavor4j.SMap;
 import com.m3.scalaflavor4j.Tuple2;
 import com.m3.scalaflavor4j.VoidF1;

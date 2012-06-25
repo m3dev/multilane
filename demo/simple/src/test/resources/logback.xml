@@ -9,7 +9,7 @@
         </layout>
     </appender>
 
-    <logger name="com.m3.multilane.demo">
+    <logger name="demo">
         <level value="debug"/>
     </logger>
 
