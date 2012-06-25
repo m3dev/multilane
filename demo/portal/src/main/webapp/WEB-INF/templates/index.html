@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Portal Demo Application with MultiLane</title>
+    <style>
+        body { padding-top: 40px; }
+    </style>
+    <link rel="stylesheet" media="screen" href="../../static/css/bootstrap.min.css"
+          th:href="@{/static/css/bootstrap.min.css}"/>
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Portal Demo Application</h1>
+    <hr/>
+
+    <h2>Headline</h2>
+    <hr/>
+    <div th:utext="${headline}">Headline</div>
+
+    <hr/>
+    <h2>Weather</h2>
+    <hr/>
+    <div th:utext="${weather}">Weather</div>
+
+    <hr/>
+    <h2>Mail</h2>
+    <hr/>
+    <div th:utext="${mail}">Mail</div>
+
+    <hr/>
+    <h2>Recommends</h2>
+    <hr/>
+    <div th:utext="${recommends}">Recommends</div>
+
+    <hr/>
+
+</div>
+</body>
+</html>
