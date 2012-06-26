@@ -62,7 +62,7 @@ public class TestServer {
                 }
                 baseRequest.setHandled(true);
             } catch (InterruptedException ie) {
-                Thread.interrupted();
+                Thread.currentThread().interrupt();
             } catch (Throwable t) {
                 throw new RuntimeException(t);
             }
