@@ -18,6 +18,8 @@ package com.m3.multilane;
 import com.m3.multilane.action.Action;
 import com.m3.scalaflavor4j.*;
 import jsr166y.ForkJoinPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -32,6 +34,8 @@ import java.util.concurrent.TimeUnit;
  * @param <R> result type
  */
 public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLane<A, R> {
+
+    protected Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Futures to collect later
@@ -77,6 +81,9 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
                 try {
                     return futureTask.get(action.getTimeoutMillis(), TimeUnit.MILLISECONDS);
                 } catch (Throwable t) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Failed to get '" + name + "' value because of " + t.getClass().getName(), t);
+                    }
                     return Left._(t);
                 }
             }
@@ -89,7 +96,7 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
         return SMap._(futures).map(new F1<Tuple2<String, F0<Either<Throwable, R>>>, Tuple2<String, Either<Throwable, R>>>() {
             public Tuple2<String, Either<Throwable, R>> _(Tuple2<String, F0<Either<Throwable, R>>> each) throws Exception {
                 String name = each._1();
-                Either<Throwable, R> result = each._2().apply();
+                Either<Throwable, R> result = each.getSecond().apply();
                 return Tuple2._(name, result);
             }
         }).toMap();
@@ -100,7 +107,7 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
         return SMap._(SMap._(collect()).toSeq().map(new F1<Tuple2<String, Either<Throwable, R>>, Tuple2<String, R>>() {
             public Tuple2<String, R> _(Tuple2<String, Either<Throwable, R>> each) throws Exception {
                 final String name = each._1();
-                final Either<Throwable, R> result = each._2();
+                final Either<Throwable, R> result = each.getSecond();
                 return Tuple._(name, result.right().getOrElse(new F0<R>() {
                     public R _() {
                         return defaultValues.get(name);

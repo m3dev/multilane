@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <Target>System.out</Target>
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] %logger{36} - %msg%n</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.m3">
+        <level value="debug"/>
+    </logger>
+
+    <root>
+        <level value="info"/>
+        <appender-ref ref="console"/>
+    </root>
+
+</configuration>
