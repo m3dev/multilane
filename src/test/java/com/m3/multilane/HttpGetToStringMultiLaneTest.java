@@ -38,7 +38,6 @@ public class HttpGetToStringMultiLaneTest {
 
     @Test
     public void collect_A$() throws Exception {
-
         HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
         HttpGetToStringAction httpGet = new HttpGetToStringAction("http://localhost:8881/?v=abc", 1000);
         multiLane.start("req-1", httpGet);
@@ -51,8 +50,34 @@ public class HttpGetToStringMultiLaneTest {
     }
 
     @Test
-    public void collectValues_A$() throws Exception {
+    public void collect_A$_TimeoutWithoutDefaultValues() throws Exception {
+        HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
+        HttpGetToStringAction httpGet = new HttpGetToStringAction("http://localhost:8881/?v=abc", 1);
+        multiLane.start("req-1", httpGet);
+        multiLane.start("req-2", httpGet);
 
+        Map<String, Either<Throwable, String>> results = multiLane.collect();
+        assertThat(results.size(), is(equalTo(2)));
+        assertThat(results.get("req-1").isLeft(), is(true));
+        assertThat(results.get("req-2").isLeft(), is(true));
+    }
+
+    @Test
+    public void collect_A$_TimeoutWithDefaultValues() throws Exception {
+        HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
+        HttpGetToStringAction httpGet = new HttpGetToStringAction("http://localhost:8881/", 1);
+        multiLane.start("req-1", httpGet, "Unavailable");
+        multiLane.start("req-2", httpGet, "Unavailable");
+
+        Map<String, Either<Throwable, String>> results = multiLane.collect();
+        assertThat(results.size(), is(equalTo(2)));
+        assertThat(results.get("req-1").isLeft(), is(true));
+        assertThat(results.get("req-2").isLeft(), is(true));
+    }
+
+
+    @Test
+    public void collectValues_A$() throws Exception {
         HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
         HttpGetToStringAction httpGet = new HttpGetToStringAction("http://localhost:8881/?v=bcd", 1000);
         multiLane.start("req-1", httpGet);
@@ -67,40 +92,26 @@ public class HttpGetToStringMultiLaneTest {
 
     @Test
     public void collectValues_A$_TimeoutWithoutDefaultValues() throws Exception {
-
         HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
         HttpGetToStringAction httpGet = new HttpGetToStringAction("http://localhost:8881/", 1);
         multiLane.start("req-1", httpGet);
         multiLane.start("req-2", httpGet);
 
-        Map<String, Either<Throwable, String>> results = multiLane.collect();
-        assertThat(results.size(), is(equalTo(2)));
-        assertThat(results.get("req-1").isLeft(), is(true));
-        assertThat(results.get("req-2").isLeft(), is(true));
-
         Map<String, String> values = multiLane.collectValues();
         assertThat(values.get("req-1"), is(nullValue()));
         assertThat(values.get("req-2"), is(nullValue()));
-
     }
 
     @Test
     public void collectValues_A$_TimeoutWithDefaultValues() throws Exception {
-
         HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
         HttpGetToStringAction httpGet = new HttpGetToStringAction("http://localhost:8881/", 1);
         multiLane.start("req-1", httpGet, "Unavailable");
         multiLane.start("req-2", httpGet, "Unavailable");
 
-        Map<String, Either<Throwable, String>> results = multiLane.collect();
-        assertThat(results.size(), is(equalTo(2)));
-        assertThat(results.get("req-1").isLeft(), is(true));
-        assertThat(results.get("req-2").isLeft(), is(true));
-
         Map<String, String> values = multiLane.collectValues();
         assertThat(values.get("req-1"), is(equalTo("Unavailable")));
         assertThat(values.get("req-2"), is(equalTo("Unavailable")));
-
     }
 
 }

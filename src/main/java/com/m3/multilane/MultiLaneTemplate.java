@@ -81,9 +81,6 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
                 try {
                     return futureTask.get(action.getTimeoutMillis(), TimeUnit.MILLISECONDS);
                 } catch (Throwable t) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Failed to get '" + name + "' value because of " + t.getClass().getName(), t);
-                    }
                     return Left._(t);
                 }
             }
@@ -106,8 +103,14 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
     public Map<String, R> collectValues() {
         return SMap._(SMap._(collect()).toSeq().map(new F1<Tuple2<String, Either<Throwable, R>>, Tuple2<String, R>>() {
             public Tuple2<String, R> _(Tuple2<String, Either<Throwable, R>> each) throws Exception {
-                final String name = each._1();
+                final String name = each.getFirst();
                 final Either<Throwable, R> result = each.getSecond();
+                if (result.isLeft()) {
+                    if (log.isDebugEnabled()) {
+                        Throwable t = result.left().getOrNull();
+                        log.debug("Failed to get '" + name + "' value because of " + t.getClass().getName(), t);
+                    }
+                }
                 return Tuple._(name, result.right().getOrElse(new F0<R>() {
                     public R _() {
                         return defaultValues.get(name);
