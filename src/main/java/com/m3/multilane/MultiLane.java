@@ -68,4 +68,11 @@ public interface MultiLane<A extends Action, R> {
      */
     Map<String, Long> spentTime();
 
+    /**
+     * Returns all the default values
+     *
+     * @return default value map
+     */
+    Map<String, R> defaultValues();
+
 }

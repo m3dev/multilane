@@ -119,6 +119,11 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
         return spentTime;
     }
 
+    @Override
+    public Map<String, R> defaultValues() {
+        return defaultValues;
+    }
+
     private static long currentMillis() {
         return System.currentTimeMillis();
     }
