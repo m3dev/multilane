@@ -1,6 +1,6 @@
 # multilane
 
-multilane is a multi-lane expressway to aggregate values in parallel. This library is in an experimental stage now.
+'multilane' is a multi-lane expressway to aggregate values in parallel.
 
 # Setup
 
@@ -13,7 +13,7 @@ Available on the maven central repository. Add the following dependency:
   <dependency>
     <groupId>com.m3</groupId>
     <artifactId>multilane</artifactId>
-    <version>0.1.3</version>
+    <version>1.0.0</version>
   </dependency>
 </dependencies>
 ```

@@ -23,22 +23,22 @@
         <mockito-all.version>1.9.0</mockito-all.version>
     </properties>
 
-    <!--
     <repositories>
+        <repository>
+            <id>sonatype oss releases</id>
+            <url>http://oss.sonatype.org/content/repositories/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
-    -->
-
-    <!--
-    <pluginRepositories>
-    </pluginRepositories>
-    -->
 
     <dependencies>
 
         <dependency>
             <groupId>com.m3</groupId>
             <artifactId>multilane</artifactId>
-            <version>0.1.0</version>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>
