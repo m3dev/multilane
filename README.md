@@ -60,7 +60,7 @@ Map<String, Either<Throwable, String>> results = multiLane.collect();
 
 ### ActionToBeanMultiLane Usage
 
-Aggregate results as a Java bean fields.
+Aggregate result values as Java bean fields.
 
 ```java
 public static class Profile {
