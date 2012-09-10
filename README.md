@@ -39,8 +39,6 @@ multiLane.start("p6", action3, unavailable);
 
 // Blocking here!
 Map<String, String> parts = multiLane.collectValues();
-
-String p1 = parts.get("p1");
 /*
  Map(
    "p1" -> "<li>Response in 1s</li>",
@@ -51,6 +49,8 @@ String p1 = parts.get("p1");
    "p6" -> "<li>Unavailable</li>"
  )
  */
+
+String p1 = parts.get("p1"); // "<li>Response in 1s</li>"
 
 // or handle Either values if you need to check the errors
 Map<String, Either<Throwable, String>> results = multiLane.collect();
