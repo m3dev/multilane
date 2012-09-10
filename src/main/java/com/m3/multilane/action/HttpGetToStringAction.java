@@ -24,48 +24,23 @@ import com.sun.jersey.api.client.Client;
 /**
  * HTTP GET request action
  */
-public class HttpGetToStringAction implements Action<String, String> {
-
-    private String url;
-
-    private Integer readTimeoutMillis = 10000;
+public class HttpGetToStringAction extends SimpleAction<String, String> {
 
     private boolean followRedirect = true;
 
     public HttpGetToStringAction(String url, Integer timeoutMillis) {
-        setInput(url);
-        setTimeoutMillis(timeoutMillis);
+        super(url, timeoutMillis);
     }
 
     @Override
     public Either<Throwable, String> apply() {
         try {
-            Client client = JerseyClientUtil.createClient(readTimeoutMillis);
+            Client client = JerseyClientUtil.createClient(getTimeoutMillis());
             client.setFollowRedirects(isFollowRedirect());
-            return Right._(client.resource(url).get(String.class));
+            return Right._(client.resource(getInput()).get(String.class));
         } catch (Throwable e) {
             return Left._(e);
         }
-    }
-
-    @Override
-    public String getInput() {
-        return this.url;
-    }
-
-    @Override
-    public void setInput(String input) {
-        this.url = input;
-    }
-
-    @Override
-    public Integer getTimeoutMillis() {
-        return this.readTimeoutMillis;
-    }
-
-    @Override
-    public void setTimeoutMillis(Integer millis) {
-        this.readTimeoutMillis = millis;
     }
 
     public boolean isFollowRedirect() {

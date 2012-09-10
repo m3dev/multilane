@@ -57,7 +57,7 @@ public interface MultiLane<A extends Action, R> {
     /**
      * Returns the actions' result values
      *
-     * @return
+     * @return values
      */
     Map<String, R> collectValues();
 

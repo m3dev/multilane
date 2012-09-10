@@ -18,7 +18,7 @@ package com.m3.multilane;
 import com.m3.multilane.action.HttpGetToBytesAction;
 
 /**
- * A MultiLane which handle {@link com.m3.multilane.action.HttpGetToBytesAction}
+ * A MultiLane which handles {@link com.m3.multilane.action.HttpGetToBytesAction}
  */
 public class HttpGetToBytesMultiLane extends MultiLaneTemplate<HttpGetToBytesAction, byte[]> {
 }

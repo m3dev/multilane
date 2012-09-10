@@ -13,12 +13,16 @@ Available on the maven central repository. Add the following dependency:
   <dependency>
     <groupId>com.m3</groupId>
     <artifactId>multilane</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
   </dependency>
 </dependencies>
 ```
 
 ## Example
+
+### Basic MultiLane Usage
+
+Simply aggregate same type values.
 
 ```java
 HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
@@ -53,6 +57,41 @@ Map<String, String> parts = multiLane.collectValues();
 // or handle Either values if you need to check the errors
 Map<String, Either<Throwable, String>> results = multiLane.collect();
 ```
+
+### ActionToBeanMultiLane Usage
+
+Aggregate results as a Java bean fields.
+
+```java
+public static class Profile {
+
+  private String name;
+  private Integer age;
+
+  public String getName() { return name; }
+  public void setName(String name) { this.name = name; }
+  public Integer getAge() { return age; }
+  public void setAge(Integer age) { this.age = age; }
+}
+
+ActionToBeanMultiLane multiLane = new ActionToBeanMultiLane();
+
+multiLane.start("name", new SimpleAction<String, String>("alice", 1000) {
+  public Either<Throwable, String> apply() {
+    return Right._(getInput().toUpperCase());
+  }
+});
+multiLane.start("age", new SimpleAction<Integer, Integer>(10, 1000) {
+  public Either<Throwable, Integer> apply() {
+    return Right._(getInput() * 2);
+  }
+});
+
+Profile profile = multiLane.collectValuesAsBean(Profile.class);
+profile.getName(); // "ALICE"
+profile.getAge(); // 20
+```
+
 
 ## License
 

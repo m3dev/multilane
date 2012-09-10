@@ -18,7 +18,7 @@ package com.m3.multilane;
 import com.m3.multilane.action.HttpGetToStringAction;
 
 /**
- * A MultiLane which handle {@link HttpGetToStringAction}
+ * A MultiLane which handles {@link HttpGetToStringAction}
  */
 public class HttpGetToStringMultiLane extends MultiLaneTemplate<HttpGetToStringAction, String> {
 }
