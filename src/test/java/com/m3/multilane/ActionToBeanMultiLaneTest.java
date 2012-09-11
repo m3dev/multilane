@@ -1,9 +1,7 @@
 package com.m3.multilane;
 
 import com.m3.multilane.action.SimpleAction;
-import com.m3.scalaflavor4j.Either;
-import com.m3.scalaflavor4j.Left;
-import com.m3.scalaflavor4j.Right;
+import com.m3.scalaflavor4j.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,17 +35,44 @@ public class ActionToBeanMultiLaneTest {
         assertThat(target, notNullValue());
     }
 
+    public static class Name {
+
+        private String first;
+        private String last;
+
+        public Name(String first, String last) {
+            setFirst(first);
+            setLast(last);
+        }
+
+        public String getFirst() {
+            return first;
+        }
+
+        public void setFirst(String first) {
+            this.first = first;
+        }
+
+        public String getLast() {
+            return last;
+        }
+
+        public void setLast(String last) {
+            this.last = last;
+        }
+    }
+
     public static class Profile {
 
-        private String name;
+        private Name name;
 
         private Integer age;
 
-        public String getName() {
+        public Name getName() {
             return name;
         }
 
-        public void setName(String name) {
+        public void setName(Name name) {
             this.name = name;
         }
 
@@ -65,9 +90,10 @@ public class ActionToBeanMultiLaneTest {
 
         ActionToBeanMultiLane multiLane = new ActionToBeanMultiLane();
 
-        multiLane.start("name", new SimpleAction<String, String>("alice", 1000) {
-            public Either<Throwable, String> apply() {
-                return Right._(getInput().toUpperCase());
+        multiLane.start("name", new SimpleAction<Name, Name>(new Name("Alice", "Cooper"), 1000) {
+            public Either<Throwable, Name> apply() {
+                Name name = getInput();
+                return Right._(new Name(name.getFirst(), name.getLast().toUpperCase()));
             }
         });
         multiLane.start("age", new SimpleAction<Integer, Integer>(10, 1000) {
@@ -78,7 +104,8 @@ public class ActionToBeanMultiLaneTest {
 
         Class<Profile> clazz = Profile.class;
         Profile profile = multiLane.collectValuesAsBean(clazz);
-        assertThat(profile.getName(), is(equalTo("ALICE")));
+        assertThat(profile.getName().getFirst(), is(equalTo("Alice")));
+        assertThat(profile.getName().getLast(), is(equalTo("COOPER")));
         assertThat(profile.getAge(), is(equalTo(20)));
     }
 
@@ -109,7 +136,7 @@ public class ActionToBeanMultiLaneTest {
         assertThat(profile.getAge(), is(equalTo(20)));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void collectValuesAsBean_A$Class_typeError() throws Exception {
         ActionToBeanMultiLane multiLane = new ActionToBeanMultiLane();
         multiLane.start("name", new SimpleAction<Integer, Integer>(10, 1000) {
@@ -123,9 +150,7 @@ public class ActionToBeanMultiLaneTest {
             }
         });
         Class<Profile> clazz = Profile.class;
-        Profile profile = multiLane.collectValuesAsBean(clazz);
-        assertThat(profile.getName(), is("20"));
-        assertThat(profile.getAge(), is(0));
+        multiLane.collectValuesAsBean(clazz);
     }
 
     @Test
