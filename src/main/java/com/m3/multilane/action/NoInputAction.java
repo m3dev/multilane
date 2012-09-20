@@ -19,6 +19,8 @@ import com.m3.scalaflavor4j.Either;
 import com.m3.scalaflavor4j.F0;
 import com.m3.scalaflavor4j.Left;
 import com.m3.scalaflavor4j.Right;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +33,8 @@ import static com.m3.scalaflavor4j.ConcurrentOps.future;
  * @param <OUTPUT> output
  */
 public abstract class NoInputAction<OUTPUT> implements Action<NoInput, OUTPUT> {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private Integer timeoutMillis;
 
@@ -68,7 +72,14 @@ public abstract class NoInputAction<OUTPUT> implements Action<NoInput, OUTPUT> {
             }).toJucFuture();
             return Right._(future.get(getTimeoutMillis(), TimeUnit.MILLISECONDS));
         } catch (Throwable e) {
+            onFailure(e);
             return Left._(e);
+        }
+    }
+
+    protected void onFailure(Throwable t) {
+        if (log.isDebugEnabled()) {
+            log.debug("Processing thrown " + t.getClass().getCanonicalName(), t);
         }
     }
 

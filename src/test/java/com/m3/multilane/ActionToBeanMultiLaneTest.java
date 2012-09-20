@@ -1,5 +1,6 @@
 package com.m3.multilane;
 
+import com.m3.multilane.action.InputAction;
 import com.m3.multilane.action.SimpleAction;
 import com.m3.scalaflavor4j.Either;
 import com.m3.scalaflavor4j.Left;
@@ -146,9 +147,9 @@ public class ActionToBeanMultiLaneTest {
                 return Right._(getInput() * 2);
             }
         });
-        multiLane.start("age", new SimpleAction<String, String>("alice", 1000) {
-            public Either<Throwable, String> apply() {
-                return Right._(getInput().toUpperCase());
+        multiLane.start("age", new InputAction<String, String>("alice", 1000) {
+            public String process(String s) {
+                return s.toUpperCase();
             }
         });
         Class<Profile> clazz = Profile.class;
@@ -158,11 +159,11 @@ public class ActionToBeanMultiLaneTest {
     @Test
     public void collectValuesAsBean_A$Class_invalidName() throws Exception {
         ActionToBeanMultiLane multiLane = new ActionToBeanMultiLane();
-        multiLane.start("ageg", new SimpleAction<Integer, Integer>(10, 1000) {
-            public Either<Throwable, Integer> apply() {
-                return Right._(getInput() * 2);
+        multiLane.start("ageg", new InputAction<Integer, Integer>(10, 1000) {
+            public Integer process(Integer i) throws Exception {
+                return i * 2;
             }
-        });
+        }, 999);
         Class<Profile> clazz = Profile.class;
         Profile profile = multiLane.collectValuesAsBean(clazz);
         assertThat(profile.getName(), is(nullValue()));
