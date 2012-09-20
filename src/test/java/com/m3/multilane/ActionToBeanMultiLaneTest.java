@@ -93,15 +93,14 @@ public class ActionToBeanMultiLaneTest {
 
         ActionToBeanMultiLane multiLane = new ActionToBeanMultiLane();
 
-        multiLane.start("name", new SimpleAction<Name, Name>(new Name("Alice", "Cooper"), 1000) {
-            public Either<Throwable, Name> apply() {
-                Name name = getInput();
-                return Right._(new Name(name.getFirst(), name.getLast().toUpperCase()));
+        multiLane.start("name", new InputAction<Name, Name>(new Name("Alice", "Cooper"), 1000) {
+            public Name process(Name name) {
+                return new Name(name.getFirst(), name.getLast().toUpperCase());
             }
         });
-        multiLane.start("age", new SimpleAction<Integer, Integer>(10, 1000) {
-            public Either<Throwable, Integer> apply() {
-                return Right._(getInput() * 2);
+        multiLane.start("age", new InputAction<Integer, Integer>(10, 1000) {
+            public Integer process(Integer i) {
+                return i * 2;
             }
         });
 
@@ -127,9 +126,9 @@ public class ActionToBeanMultiLaneTest {
                 return Right._(getInput().toUpperCase());
             }
         });
-        multiLane.start("age", new SimpleAction<Integer, Integer>(10, 1000) {
-            public Either<Throwable, Integer> apply() {
-                return Right._(getInput() * 2);
+        multiLane.start("age", new InputAction<Integer, Integer>(10, 1000) {
+            public Integer process(Integer i) {
+                return i * 2;
             }
         });
 
@@ -142,9 +141,9 @@ public class ActionToBeanMultiLaneTest {
     @Test(expected = IllegalArgumentException.class)
     public void collectValuesAsBean_A$Class_typeError() throws Exception {
         ActionToBeanMultiLane multiLane = new ActionToBeanMultiLane();
-        multiLane.start("name", new SimpleAction<Integer, Integer>(10, 1000) {
-            public Either<Throwable, Integer> apply() {
-                return Right._(getInput() * 2);
+        multiLane.start("name", new InputAction<Integer, Integer>(10, 1000) {
+            public Integer process(Integer i) {
+                return i * 2;
             }
         });
         multiLane.start("age", new InputAction<String, String>("alice", 1000) {
