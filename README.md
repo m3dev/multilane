@@ -65,25 +65,26 @@ Aggregate result values as Java bean fields.
 ```java
 public static class Profile {
 
-  private String name;
+  private Name name;
   private Integer age;
 
-  public String getName() { return name; }
-  public void setName(String name) { this.name = name; }
-  public Integer getAge() { return age; }
+  public Name getName() { return name; }
+  public void setName(Name name) { this.name = name; }
+  public Intger getAge() { return age; }
   public void setAge(Integer age) { this.age = age; }
 }
 
 ActionToBeanMultiLane multiLane = new ActionToBeanMultiLane();
 
-multiLane.start("name", new InputAction<String, String>("alice", 1000) {
-  public String process(String input) {
-    return input.toUpperCase();
+int timeoutMillis = 1000;
+multiLane.start("name", new InputAction<String, Name>("alice", timeoutMillis) {
+  public Name process(String input) {
+    return new Name(input.toUpperCase());
   }
 });
-multiLane.start("age", new SimpleAction<Integer, Integer>(10, 1000) {
-  public Integer process(Integer input) {
-    return input * 2;
+multiLane.start("age", new SimpleAction<Long, Integer>(10L, timeoutMillis) {
+  public Integer process(Long input) {
+    return (input * 2).intValue();
   }
 });
 
