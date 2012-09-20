@@ -78,13 +78,13 @@ ActionToBeanMultiLane multiLane = new ActionToBeanMultiLane();
 
 int timeoutMillis = 1000;
 multiLane.start("name", new InputAction<String, Name>("alice", timeoutMillis) {
-  public Name process(String input) {
+  public Name process(String input) throws Exception {
     return new Name(input.toUpperCase());
   }
 });
-multiLane.start("age", new SimpleAction<Long, Integer>(10L, timeoutMillis) {
-  public Integer process(Long input) {
-    return (input * 2).intValue();
+multiLane.start("age", new NoInputAction<Integer>(timeoutMillis) {
+  public Integer process() throws Exception {
+    return 20;
   }
 });
 
