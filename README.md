@@ -13,7 +13,7 @@ Available on the maven central repository. Add the following dependency:
   <dependency>
     <groupId>com.m3</groupId>
     <artifactId>multilane</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
   </dependency>
 </dependencies>
 ```
