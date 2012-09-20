@@ -1,7 +1,9 @@
 package com.m3.multilane;
 
 import com.m3.multilane.action.SimpleAction;
-import com.m3.scalaflavor4j.*;
+import com.m3.scalaflavor4j.Either;
+import com.m3.scalaflavor4j.Left;
+import com.m3.scalaflavor4j.Right;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

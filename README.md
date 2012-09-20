@@ -76,14 +76,14 @@ public static class Profile {
 
 ActionToBeanMultiLane multiLane = new ActionToBeanMultiLane();
 
-multiLane.start("name", new SimpleAction<String, String>("alice", 1000) {
-  public Either<Throwable, String> apply() {
-    return Right._(getInput().toUpperCase());
+multiLane.start("name", new InputAction<String, String>("alice", 1000) {
+  public String process(String input) {
+    return input.toUpperCase();
   }
 });
 multiLane.start("age", new SimpleAction<Integer, Integer>(10, 1000) {
-  public Either<Throwable, Integer> apply() {
-    return Right._(getInput() * 2);
+  public Integer process(Integer input) {
+    return input * 2;
   }
 });
 
