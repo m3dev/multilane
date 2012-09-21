@@ -32,6 +32,12 @@ public class RendezvousFactoryTest {
                 result2 = "bbb";
             }
         }, 1000);
+        rendezvous.start(new Runnable() {
+            public void run() {
+                sleep(1000000L);
+                result2 = "ccc";
+            }
+        }, 500);
         assertThat(result1, is(nullValue()));
         assertThat(result1, is(nullValue()));
 

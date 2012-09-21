@@ -42,14 +42,21 @@ public class DefaultRendezvousTest {
     @Test
     public void start_A$Runnable$Integer() throws Exception {
         DefaultRendezvous rendezvous = new DefaultRendezvous();
-        Runnable runnable = new Runnable() {
+        Runnable runnable1 = new Runnable() {
             public void run() {
                 sleep(100L);
                 result = "ok";
             }
         };
+        Runnable runnable2 = new Runnable() {
+            public void run() {
+                sleep(10000000L);
+                result = "ng";
+            }
+        };
         Integer timeoutMillis = 100;
-        rendezvous.start(runnable, timeoutMillis);
+        rendezvous.start(runnable1, timeoutMillis);
+        rendezvous.start(runnable2, timeoutMillis);
         assertThat(result, is(nullValue()));
 
         rendezvous.awaitAll();
