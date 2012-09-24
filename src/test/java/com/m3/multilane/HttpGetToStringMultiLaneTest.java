@@ -84,7 +84,7 @@ public class HttpGetToStringMultiLaneTest {
 
 
     @Test
-    public void collectValues_A$() throws Exception {
+    public void collectValues_A$_SameAction() throws Exception {
         HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
         HttpGetToStringAction httpGet = new HttpGetToStringAction("http://localhost:8881/?v=bcd", 1000);
         multiLane.start("req-1", httpGet);
@@ -97,18 +97,35 @@ public class HttpGetToStringMultiLaneTest {
         assertThat(values.get("req-2"), is(equalTo("bcd")));
     }
 
+    @Test
+    public void collectValues_A$() throws Exception {
+        HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
+        HttpGetToStringAction httpGet1 = new HttpGetToStringAction("http://localhost:8881/?v=bcd", 3000);
+        HttpGetToStringAction httpGet2 = new HttpGetToStringAction("http://localhost:8881/?v=cde", 3000);
+        multiLane.start("req-1", httpGet1);
+        multiLane.start("req-2", httpGet2);
+
+        Map<String, String> result = multiLane.collectValues();
+
+        assertThat(result.get("req-1"), is(equalTo("bcd")));
+        assertThat(result.get("req-2"), is(equalTo("cde")));
+    }
+
     /**
      * https://github.com/m3dev/multilane/issues/1
      */
     @Test
     public void collectValues_A$_Issue1() throws Exception {
+        final HttpGetToStringAction httpGet1 = new HttpGetToStringAction("http://localhost:8881/?v=bcd", 3000);
+        final HttpGetToStringAction httpGet2 = new HttpGetToStringAction("http://localhost:8881/?v=cde", 3000);
         SInt._(1).to(10000).par().foreach(new VoidF1<Integer>() {
             public void _(Integer i) throws Exception {
                 HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
-                HttpGetToStringAction httpGet = new HttpGetToStringAction("http://localhost:8881/?v=bcd", 3000);
-                multiLane.start("req-1", httpGet);
-                multiLane.start("req-2", httpGet);
-                multiLane.collectValues();
+                multiLane.start("req-1", httpGet1);
+                multiLane.start("req-2", httpGet2);
+                Map<String, String> result = multiLane.collectValues();
+                assertThat(result.get("req-1"), is(equalTo("bcd")));
+                assertThat(result.get("req-2"), is(equalTo("cde")));
             }
         });
         SInt._(1).to(1000).foreach(new VoidF1<Integer>() {
