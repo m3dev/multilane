@@ -91,4 +91,8 @@ public class Aggregator {
         this.multiLane = multiLane;
     }
 
+    public Map<String, Long> getSpentTime() {
+        return multiLane.spentTime();
+    }
+
 }

@@ -7,6 +7,7 @@ import org.thymeleaf.context.WebContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,6 +20,8 @@ public class InOrderResource {
 
     @Context
     HttpServletRequest request;
+    @Context
+    HttpServletResponse response;
     @Context
     ServletContext servletContext;
 
@@ -38,7 +41,7 @@ public class InOrderResource {
 
         Long start = System.currentTimeMillis();
 
-        WebContext context = new WebContext(request, servletContext);
+        WebContext context = new WebContext(request, response, servletContext);
         context.setVariable("p1", get("http://localhost:8080/api/1000", timeout));
         context.setVariable("p2", get("http://localhost:8080/api/1000", timeout));
         context.setVariable("p3", get("http://localhost:8080/api/1000", timeout));

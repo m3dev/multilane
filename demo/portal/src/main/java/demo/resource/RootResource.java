@@ -2,11 +2,14 @@ package demo.resource;
 
 import demo.aggregator.*;
 import demo.view.TemplateEngineManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,8 +22,12 @@ import java.util.Map;
 @Path("/")
 public class RootResource {
 
+    Logger log = LoggerFactory.getLogger(this.getClass());
+
     @Context
     HttpServletRequest request;
+    @Context
+    HttpServletResponse response;
     @Context
     ServletContext servletContext;
 
@@ -47,8 +54,14 @@ public class RootResource {
         // blocking!
         Map<String, String> contents = aggregator.collectValues();
 
+        log.info("*** Spent time for each part ***");
+        for (Map.Entry<String, Long> spentTime : aggregator.getSpentTime().entrySet()) {
+            log.info(" " + spentTime.getKey() + " -> " + spentTime.getValue() + " millis.");
+        }
+        log.info("********************************");
+
         // bind contents
-        WebContext context = new WebContext(request, servletContext);
+        WebContext context = new WebContext(request, response, servletContext);
         for (ContentSetting setting : contentSettings) {
             context.setVariable(setting.getId(), contents.get(setting.getId()));
         }

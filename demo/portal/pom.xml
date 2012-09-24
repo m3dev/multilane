@@ -17,10 +17,10 @@
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jersey.version>1.12</jersey.version>
-        <slf4j.version>1.6.4</slf4j.version>
-        <joda-time.version>1.6.2</joda-time.version>
-        <junit.version>4.10</junit.version>
-        <mockito-all.version>1.9.0</mockito-all.version>
+        <slf4j.version>[1.6,)</slf4j.version>
+        <joda-time.version>2.1</joda-time.version>
+        <junit.version>[4,)</junit.version>
+        <mockito-all.version>[1.9,)</mockito-all.version>
     </properties>
 
     <repositories>
@@ -38,13 +38,13 @@
         <dependency>
             <groupId>com.m3</groupId>
             <artifactId>multilane</artifactId>
-            <version>1.0.1</version>
+            <version>[1.0,)</version>
         </dependency>
 
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
-            <version>2.0.8</version>
+            <version>[2.0,)</version>
         </dependency>
 
         <!-- JAX-RS -->
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.0.2</version>
+            <version>[1.0,)</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

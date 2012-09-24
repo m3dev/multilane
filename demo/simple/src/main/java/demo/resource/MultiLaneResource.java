@@ -2,10 +2,10 @@ package demo.resource;
 
 import com.m3.multilane.HttpGetToStringMultiLane;
 import com.m3.multilane.action.HttpGetToStringAction;
-import demo.view.TemplateEngineManager;
 import com.m3.scalaflavor4j.SMap;
 import com.m3.scalaflavor4j.Tuple2;
 import com.m3.scalaflavor4j.VoidF1;
+import demo.view.TemplateEngineManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
@@ -13,6 +13,7 @@ import org.thymeleaf.context.WebContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,6 +29,8 @@ public class MultiLaneResource {
 
     @Context
     HttpServletRequest request;
+    @Context
+    HttpServletResponse response;
     @Context
     ServletContext servletContext;
 
@@ -53,13 +56,13 @@ public class MultiLaneResource {
 
         Map<String, String> parts = multiLane.collectValues();
 
-        SMap._(multiLane.spentTime()).foreach(new VoidF1<Tuple2<String, Long>>() {
-            public void _(Tuple2<String, Long> each) {
-                log.info(each._1() + " -> " + each._2() + " ms");
-            }
-        });
+        log.info("*** Spent time for each part ***");
+        for (Map.Entry<String, Long> spentTime : multiLane.spentTime().entrySet()) {
+            log.info(" " + spentTime.getKey() + " -> " + spentTime.getValue() + " millis.");
+        }
+        log.info("********************************");
 
-        WebContext context = new WebContext(request, servletContext);
+        WebContext context = new WebContext(request, response, servletContext);
         context.setVariable("p1", parts.get("p1"));
         context.setVariable("p2", parts.get("p2"));
         context.setVariable("p3", parts.get("p3"));
