@@ -55,7 +55,16 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
     /**
      * Fork/Join Pool
      */
-    protected ForkJoinPool forkJoinPool = new ForkJoinPool();
+    private static final ForkJoinPool forkJoinPool = new ForkJoinPool();
+
+    /**
+     * Returns singleton forkJoinPool
+     *
+     * @return forkJoinPool
+     */
+    public ForkJoinPool getForkJoinPool() {
+        return forkJoinPool;
+    }
 
     @Override
     public MultiLane<A, R> start(final String name, final A action) {
@@ -75,7 +84,7 @@ public abstract class MultiLaneTemplate<A extends Action, R> implements MultiLan
                 return result;
             }
         });
-        forkJoinPool.execute(futureTask);
+        getForkJoinPool().execute(futureTask);
         futures.put(name, new F0<Either<Throwable, R>>() {
             public Either<Throwable, R> _() {
                 try {

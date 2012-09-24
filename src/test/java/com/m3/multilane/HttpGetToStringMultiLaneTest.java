@@ -2,16 +2,23 @@ package com.m3.multilane;
 
 import com.m3.multilane.action.HttpGetToStringAction;
 import com.m3.scalaflavor4j.Either;
+import com.m3.scalaflavor4j.SInt;
+import com.m3.scalaflavor4j.VoidF1;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class HttpGetToStringMultiLaneTest {
+
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
     TestServer server = new TestServer(8881);
 
@@ -88,6 +95,32 @@ public class HttpGetToStringMultiLaneTest {
 
         assertThat(values.get("req-1"), is(equalTo("bcd")));
         assertThat(values.get("req-2"), is(equalTo("bcd")));
+    }
+
+    /**
+     * https://github.com/m3dev/multilane/issues/1
+     */
+    @Test
+    public void collectValues_A$_Issue1() throws Exception {
+        SInt._(1).to(10000).par().foreach(new VoidF1<Integer>() {
+            public void _(Integer i) throws Exception {
+                HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
+                HttpGetToStringAction httpGet = new HttpGetToStringAction("http://localhost:8881/?v=bcd", 3000);
+                multiLane.start("req-1", httpGet);
+                multiLane.start("req-2", httpGet);
+                multiLane.collectValues();
+            }
+        });
+        SInt._(1).to(1000).foreach(new VoidF1<Integer>() {
+            public void _(Integer v1) throws Exception {
+                long size = Thread.getAllStackTraces().size();
+                log.info("Thread.getAllStackTraces().size() -> " + size);
+                if (size > 300) {
+                    fail("Too many threads are created!");
+                }
+                Thread.sleep(10L);
+            }
+        });
     }
 
     @Test
