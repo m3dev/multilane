@@ -13,7 +13,7 @@ Available on the maven central repository. Add the following dependency:
   <dependency>
     <groupId>com.m3</groupId>
     <artifactId>multilane</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
   </dependency>
 </dependencies>
 ```
@@ -23,6 +23,31 @@ Available on the maven central repository. Add the following dependency:
 ### Basic MultiLane Usage
 
 Simply aggregate same type values.
+
+```java
+MultiLane<String, Result> multiLane = new MultiLaneTemplate<String, Result> {};
+
+int timeoutMillis = 1000;
+multiLane.start("part1", new InputAction<String, Result>("A", timeoutMillis) {
+  protected Result process(String input) throws Exception {
+    return doSomething(input);
+  }
+});
+multiLane.start("part2", new InputAction<String, Result>("B", timeoutMillis) {
+  protected Result process(String input) throws Exception {
+    return doSomething(input);
+  }
+}, Result.Failed); // with default value
+
+// Use #collect() if you want to handle each action's failure
+Map<String, Either<Throwable, Result>> result = multiLane.collect();
+
+// Use #collectValues() if you just want to aggregate values
+// It'll use null or default value if action failed or timed out)
+Map<String, Result> resultMap = multiLane.collectValues();
+```
+
+Or use built-in if possible.
 
 ```java
 HttpGetToStringMultiLane multiLane = new HttpGetToStringMultiLane();
