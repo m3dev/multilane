@@ -18,6 +18,8 @@ Available on the maven central repository. Add the following dependency:
 </dependencies>
 ```
 
+CAUTION: Don't use older version than 1.0.4. The previous versions have [a critical bug](https://github.com/m3dev/multilane/issues/1).
+
 ## Example
 
 ### Basic MultiLane Usage
