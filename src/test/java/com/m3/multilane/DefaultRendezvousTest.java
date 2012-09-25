@@ -70,6 +70,29 @@ public class DefaultRendezvousTest {
         assertThat(result, is(equalTo("ok")));
     }
 
+    String result_start_A$Runnable$Integer_Timeout;
+
+    @Test
+    public void start_A$Runnable$Integer_AfterTimeout() throws Exception {
+        DefaultRendezvous rendezvous = new DefaultRendezvous();
+        Runnable runnable1 = new Runnable() {
+            public void run() {
+                sleep(500L);
+                result_start_A$Runnable$Integer_Timeout = "after_timeout";
+            }
+        };
+        result_start_A$Runnable$Integer_Timeout = null;
+        Integer timeoutMillis = 100;
+        rendezvous.start(runnable1, timeoutMillis);
+        assertThat(result, is(nullValue()));
+
+        rendezvous.awaitAll();
+        assertThat(result, is(nullValue()));
+
+        Thread.sleep(1000L);
+        assertThat(result_start_A$Runnable$Integer_Timeout, is(equalTo("after_timeout")));
+    }
+
     @Test
     public void stressTest() throws Exception {
 
@@ -104,7 +127,6 @@ public class DefaultRendezvousTest {
             }
         });
     }
-
 
     @Test
     public void onFailure_A$Throwable() throws Exception {
