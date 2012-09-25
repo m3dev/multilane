@@ -1,11 +1,18 @@
 package com.m3.multilane;
 
+import com.m3.scalaflavor4j.SInt;
+import com.m3.scalaflavor4j.VoidF1;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class DefaultRendezvousTest {
+
+    Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Test
     public void type() throws Exception {
@@ -62,6 +69,42 @@ public class DefaultRendezvousTest {
         rendezvous.awaitAll();
         assertThat(result, is(equalTo("ok")));
     }
+
+    @Test
+    public void stressTest() throws Exception {
+
+        final Runnable runnable1 = new Runnable() {
+            public void run() {
+                sleep(100L);
+            }
+        };
+        final Runnable runnable2 = new Runnable() {
+            public void run() {
+                sleep(10000000L);
+            }
+        };
+
+        SInt._(1).to(10000).par().foreach(new VoidF1<Integer>() {
+            public void _(Integer i) throws Exception {
+                DefaultRendezvous rendezvous = new DefaultRendezvous();
+                Integer timeoutMillis = 100;
+                rendezvous.start(runnable1, timeoutMillis);
+                rendezvous.start(runnable2, timeoutMillis);
+                rendezvous.awaitAll();
+            }
+        });
+        SInt._(1).to(1000).foreach(new VoidF1<Integer>() {
+            public void _(Integer i) throws Exception {
+                long size = Thread.getAllStackTraces().size();
+                log.info("Thread.getAllStackTraces().size() -> " + size);
+                if (size > 300) {
+                    fail("Too many threads are created!");
+                }
+                Thread.sleep(10L);
+            }
+        });
+    }
+
 
     @Test
     public void onFailure_A$Throwable() throws Exception {

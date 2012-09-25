@@ -21,11 +21,6 @@ public class DefaultRendezvous implements Rendezvous {
      */
     protected List<VoidF0> futures = new ArrayList<VoidF0>();
 
-    /**
-     * Fork/Join Pool
-     */
-    protected ForkJoinPool forkJoinPool = new ForkJoinPool();
-
     @Override
     public Rendezvous start(Runnable runnable, final Integer timeoutMillis) {
         if (runnable == null) {
@@ -35,7 +30,7 @@ public class DefaultRendezvous implements Rendezvous {
             throw new IllegalArgumentException("The timeout millis should not be null.");
         }
         final FutureTask<Void> task = new FutureTask<Void>(runnable, null);
-        forkJoinPool.execute(task);
+        ForkJoinPoolProvider.getForkJoinPool().execute(task);
         futures.add(new VoidF0() {
             public void _() {
                 try {
